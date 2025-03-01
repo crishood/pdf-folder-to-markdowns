@@ -1,5 +1,8 @@
 import { Plugin, TFile, Notice } from "obsidian";
-import { SupportedLanguages, TRANSLATIONS } from "./constants/copy.constants";
+import {
+	SupportedLanguages,
+	TRANSLATIONS,
+} from "./constants/language.constants";
 export default class PDFFolderToMarkdowns extends Plugin {
 	private language: SupportedLanguages;
 	private inputFolderSuffix: string = "_NOTES";
