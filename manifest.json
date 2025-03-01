@@ -1,11 +1,11 @@
 {
-	"id": "sample-plugin",
-	"name": "Sample Plugin",
+	"id": "pdf-folder-to-markdowns",
+	"name": "PDF Folder to Markdowns",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "Demonstrates some of the capabilities of the Obsidian API.",
-	"author": "Obsidian",
-	"authorUrl": "https://obsidian.md",
-	"fundingUrl": "https://obsidian.md/pricing",
+	"description": "Create markdown files from a folder of PDFs",
+	"author": "CrisHood",
+	"authorUrl": "https://github.com/crishood",
+	"fundingUrl": "https://buymeacoffee.com/crishood",
 	"isDesktopOnly": false
 }
