@@ -1,7 +1,7 @@
 {
 	"id": "pdf-folder-to-markdowns",
 	"name": "PDF Folder to Markdowns",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"minAppVersion": "0.15.0",
 	"description": "Convert a folder of PDFs into a folder of Markdown files with embedded PDFs. Ideal for users migrating PDF notes from apps like Boox or organizing reference materials inside Obsidian, ensuring a seamless workflow for note-taking and knowledge management.",
 	"author": "CrisHood",

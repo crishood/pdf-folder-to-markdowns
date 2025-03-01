@@ -1,7 +1,7 @@
 {
 	"name": "pdf-folder-to-markdowns",
-	"version": "1.0.0",
-	"description": "Create markdown files from a folder of PDFs",
+	"version": "1.0.1",
+	"description": "Convert a folder of PDFs into a folder of Markdown files with embedded PDFs. Ideal for users migrating PDF notes from apps like Boox or organizing reference materials inside Obsidian, ensuring a seamless workflow for note-taking and knowledge management.",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
