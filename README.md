@@ -1,4 +1,4 @@
-# 📄 PDF Folder to Markdown
+# 📄 PDF Folder to Markdowns
 
 Convert a folder of PDFs into a folder of Markdown files with embedded PDFs.  
 This plugin is useful for users who want to migrate their PDF notes from different apps (e.g., Boox) or organize their reference materials inside **Obsidian**.
