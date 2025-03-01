@@ -38,6 +38,18 @@ This plugin is useful for users who want to migrate their PDF notes from differe
 3. Make your changes and ensure the code follows best practices.
 4. Submit a pull request.
 
+## 📄 License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## 📝 Acknowledgements
+
+-   [Obsidian](https://obsidian.md/)
+
+## 📚 API References
+
+-   [Obsidian API](https://github.com/obsidianmd/obsidian-api)
+
 ---
 
 **Created with ❤️ for the Obsidian community.**
