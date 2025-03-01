@@ -1,16 +1,10 @@
-import {
-	Plugin,
-	TFile,
-	Notice,
-	App,
-	Setting,
-	PluginSettingTab,
-} from "obsidian";
+import { Plugin, TFile, Notice } from "obsidian";
 import {
 	SupportedLanguages,
 	TRANSLATIONS,
 } from "./constants/language.constants";
 import { Settings, DEFAULT_SETTINGS } from "./models/settings.model";
+import { PDFFolderToMarkdownsSettingTab } from "./settings-tab";
 
 const DEFAULT_LANGUAGE: SupportedLanguages = "en";
 
@@ -48,7 +42,7 @@ export default class PDFFolderToMarkdowns extends Plugin {
 
 			// Calculate folder paths
 			const { renamedInputFolder, outputFolder } =
-				this.calculateFolderPaths(inputFolder);
+				this._calculateFolderPaths(inputFolder);
 
 			// Rename input folder
 			if (this.settings.renameInputFolder) {
@@ -109,7 +103,7 @@ export default class PDFFolderToMarkdowns extends Plugin {
 		}
 	}
 
-	private calculateFolderPaths(inputFolder: string): {
+	private _calculateFolderPaths(inputFolder: string): {
 		renamedInputFolder: string;
 		outputFolder: string;
 	} {
@@ -147,53 +141,5 @@ export default class PDFFolderToMarkdowns extends Plugin {
 
 	async saveSettings() {
 		await this.saveData(this.settings);
-	}
-}
-
-export class PDFFolderToMarkdownsSettingTab extends PluginSettingTab {
-	plugin: PDFFolderToMarkdowns;
-
-	constructor(app: App, plugin: PDFFolderToMarkdowns) {
-		super(app, plugin);
-		this.plugin = plugin;
-	}
-
-	display(): void {
-		const { containerEl } = this;
-		containerEl.empty();
-
-		new Setting(containerEl)
-			.setName(TRANSLATIONS[this.plugin.language].RENAME_INPUT_FOLDER)
-			.setDesc(
-				TRANSLATIONS[this.plugin.language]
-					.RENAME_INPUT_FOLDER_DESCRIPTION
-			)
-			.addToggle((toggle) =>
-				toggle
-					.setValue(this.plugin.settings.renameInputFolder)
-					.onChange(async (value) => {
-						this.plugin.settings.renameInputFolder = value;
-						await this.plugin.saveSettings();
-					})
-			);
-
-		new Setting(containerEl)
-			.setName(TRANSLATIONS[this.plugin.language].INPUT_FOLDER_SUFFIX)
-			.setDesc(
-				TRANSLATIONS[this.plugin.language]
-					.INPUT_FOLDER_SUFFIX_DESCRIPTION
-			)
-			.addText((text) =>
-				text
-					.setValue(this.plugin.settings.inputFolderSuffix)
-					.onChange(async (value) => {
-						this.plugin.settings.inputFolderSuffix = value;
-						await this.plugin.saveSettings();
-					})
-			);
-
-		new Setting(containerEl).setDesc(
-			TRANSLATIONS[this.plugin.language].DISCLAIMER
-		);
 	}
 }
