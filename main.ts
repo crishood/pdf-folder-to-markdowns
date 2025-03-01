@@ -1,14 +1,20 @@
 import { Plugin, TFile, Notice } from "obsidian";
-
+import { SupportedLanguages, TRANSLATIONS } from "./constants/copy.constants";
 export default class PDFFolderToMarkdowns extends Plugin {
+	private language: SupportedLanguages;
+	private inputFolderSuffix: string = "_NOTES";
+
 	async onload() {
+		this.language =
+			(window.localStorage.getItem("language") as SupportedLanguages) ||
+			"en";
 		this.registerEvent(
 			this.app.workspace.on("file-menu", (menu, folder) => {
 				if (folder instanceof TFile || !folder) return;
 				menu.addItem((item) => {
-					item.setTitle("Convert PDFs to Markdown").onClick(() =>
-						this.convertPDFsToMarkdown(folder.path)
-					);
+					item.setTitle(
+						TRANSLATIONS[this.language].CONVERT_PDFS_TO_MARKDOWN
+					).onClick(() => this.convertPDFsToMarkdown(folder.path));
 				});
 			})
 		);
@@ -18,15 +24,20 @@ export default class PDFFolderToMarkdowns extends Plugin {
 		const vault = this.app.vault;
 		const folderName = inputFolder.split("/").pop();
 		let renamedInputFolder = "";
+		let outputFolder = "";
 		if (!folderName) return;
 
 		// Rename input folder
-		if (!inputFolder.includes("_PDF")) {
-			renamedInputFolder = `${inputFolder}_PDF`;
-		} else {
+		if (inputFolder.includes(this.inputFolderSuffix)) {
 			renamedInputFolder = `${inputFolder}`;
+			outputFolder = renamedInputFolder.replace(
+				this.inputFolderSuffix,
+				""
+			);
+		} else {
+			renamedInputFolder = `${inputFolder}${this.inputFolderSuffix}`;
+			outputFolder = `${inputFolder}`;
 		}
-		const outputFolder = `${inputFolder}`;
 
 		// Rename input folder
 		await vault.adapter.rename(inputFolder, renamedInputFolder);
@@ -53,6 +64,6 @@ export default class PDFFolderToMarkdowns extends Plugin {
 			await vault.create(mdFilePath, mdContent);
 		}
 
-		new Notice("PDFs converted to Markdown and folder renamed.");
+		new Notice(TRANSLATIONS[this.language].PDFS_CONVERTED_TO_MARKDOWN);
 	}
 }
