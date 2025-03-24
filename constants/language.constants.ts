@@ -19,16 +19,16 @@ export const TRANSLATIONS: Record<
 	}
 > = {
 	en: {
-		CONVERT_PDFS_TO_MARKDOWN: "Convert PDFs to Markdown Folder",
-		PDFS_CONVERTED_TO_MARKDOWN: "PDFs converted to Markdown Folder",
-		RENAME_INPUT_FOLDER: "Rename Input Folder",
+		CONVERT_PDFS_TO_MARKDOWN: "Convert PDFs to markdown folder",
+		PDFS_CONVERTED_TO_MARKDOWN: "PDFs converted to markdown folder",
+		RENAME_INPUT_FOLDER: "Rename input folder",
 		RENAME_INPUT_FOLDER_DESCRIPTION:
 			"Rename the input folder by adding a suffix after conversion",
-		INPUT_FOLDER_SUFFIX: "Input Folder Suffix",
+		INPUT_FOLDER_SUFFIX: "Input folder suffix",
 		INPUT_FOLDER_SUFFIX_DESCRIPTION:
 			"Add a suffix to the input folder after conversion (e.g. _PDF)",
 		DISCLAIMER:
-			"*If theres no suffix, the files will be converted to the root folder.",
+			"*If there's no suffix, the files will be converted to the root folder",
 		INVALID_FOLDER_PATH: "Invalid folder path",
 		FOLDER_RENAME_ERROR: "Error renaming folder",
 		FOLDER_CREATE_ERROR: "Error creating folder",

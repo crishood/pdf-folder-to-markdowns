@@ -1,4 +1,4 @@
-import { Plugin, TFile, Notice } from "obsidian";
+import { Plugin, TFile, Notice, getLanguage, FileManager } from "obsidian";
 import {
 	SupportedLanguages,
 	TRANSLATIONS,
@@ -11,11 +11,11 @@ const DEFAULT_LANGUAGE: SupportedLanguages = "en";
 export default class PDFFolderToMarkdowns extends Plugin {
 	public settings: Settings = DEFAULT_SETTINGS;
 	public language: SupportedLanguages;
-
+	public fileManager: FileManager;
 	async onload() {
+		this.fileManager = new FileManager();
 		this.language =
-			(window.localStorage.getItem("language") as SupportedLanguages) ||
-			DEFAULT_LANGUAGE;
+			(getLanguage() as SupportedLanguages) || DEFAULT_LANGUAGE;
 		this.registerEvent(
 			this.app.workspace.on("file-menu", (menu, folder) => {
 				if (folder instanceof TFile || !folder) return;
@@ -47,7 +47,13 @@ export default class PDFFolderToMarkdowns extends Plugin {
 			// Rename input folder
 			if (this.settings.renameInputFolder) {
 				try {
-					await vault.adapter.rename(inputFolder, renamedInputFolder);
+					const folder =
+						this.app.vault.getAbstractFileByPath(inputFolder);
+					if (!folder) throw new Error("Folder not found");
+					await this.fileManager.renameFile(
+						folder,
+						renamedInputFolder
+					);
 				} catch (error) {
 					new Notice(TRANSLATIONS[this.language].FOLDER_RENAME_ERROR);
 					return;
