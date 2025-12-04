@@ -13,29 +13,15 @@ export class PDFFolderToMarkdownsSettingTab extends PluginSettingTab {
 	display(): void {
 		const { containerEl } = this;
 		containerEl.empty();
+		const t = TRANSLATIONS[this.plugin.language];
 
 		new Setting(containerEl)
-			.setName(TRANSLATIONS[this.plugin.language].USE_ATTACHMENT_SETTINGS)
-			.setDesc(
-				TRANSLATIONS[this.plugin.language]
-					.USE_ATTACHMENT_SETTINGS_DESCRIPTION
-			)
-			.addToggle((toggle) =>
-				toggle
-					.setValue(this.plugin.settings.useAttachmentSettings)
-					.onChange(async (value) => {
-						this.plugin.settings.useAttachmentSettings = value;
-						await this.plugin.saveSettings();
-						this.display(); // Refresh to show/hide relevant settings
-					})
-			);
+			.setHeading()
+			.setName(t.FOLDER_SECTION_HEADING);
 
 		new Setting(containerEl)
-			.setName(TRANSLATIONS[this.plugin.language].RENAME_INPUT_FOLDER)
-			.setDesc(
-				TRANSLATIONS[this.plugin.language]
-					.RENAME_INPUT_FOLDER_DESCRIPTION
-			)
+			.setName(t.RENAME_INPUT_FOLDER)
+			.setDesc(t.RENAME_INPUT_FOLDER_DESCRIPTION)
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.plugin.settings.renameInputFolder)
@@ -46,11 +32,8 @@ export class PDFFolderToMarkdownsSettingTab extends PluginSettingTab {
 			);
 
 		new Setting(containerEl)
-			.setName(TRANSLATIONS[this.plugin.language].INPUT_FOLDER_SUFFIX)
-			.setDesc(
-				TRANSLATIONS[this.plugin.language]
-					.INPUT_FOLDER_SUFFIX_DESCRIPTION
-			)
+			.setName(t.INPUT_FOLDER_SUFFIX)
+			.setDesc(t.INPUT_FOLDER_SUFFIX_DESCRIPTION)
 			.addText((text) =>
 				text
 					.setValue(this.plugin.settings.inputFolderSuffix)
@@ -60,8 +43,60 @@ export class PDFFolderToMarkdownsSettingTab extends PluginSettingTab {
 					})
 			);
 
-		new Setting(containerEl).setDesc(
-			TRANSLATIONS[this.plugin.language].DISCLAIMER
-		);
+		new Setting(containerEl).setDesc(t.DISCLAIMER);
+
+		new Setting(containerEl)
+			.setHeading()
+			.setName(t.ATTACHMENT_SECTION_HEADING);
+
+		new Setting(containerEl)
+			.setName(t.USE_ATTACHMENT_SETTINGS)
+			.setDesc(t.USE_ATTACHMENT_SETTINGS_DESCRIPTION)
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.useAttachmentSettings)
+					.onChange(async (value) => {
+						this.plugin.settings.useAttachmentSettings = value;
+						await this.plugin.saveSettings();
+						this.display();
+					})
+			);
+
+		new Setting(containerEl)
+			.setHeading()
+			.setName(t.TEMPLATE_SECTION_HEADING);
+
+		new Setting(containerEl)
+			.setName(t.APPLY_TEMPLATE)
+			.setDesc(t.APPLY_TEMPLATE_DESCRIPTION)
+			.addToggle((toggle) =>
+				toggle
+					.setValue(
+						this.plugin.settings.applyTemplateAfterCreation
+					)
+					.onChange(async (value) => {
+						this.plugin.settings.applyTemplateAfterCreation = value;
+						await this.plugin.saveSettings();
+						this.display();
+					})
+			);
+
+		if (this.plugin.settings.applyTemplateAfterCreation) {
+			new Setting(containerEl)
+				.setName(t.TEMPLATE_NAME)
+				.setDesc(t.TEMPLATE_NAME_DESCRIPTION)
+				.addText((text) =>
+					text
+						.setPlaceholder("My Template")
+						.setValue(
+							this.plugin.settings.templateNameOrPath
+						)
+						.onChange(async (value) => {
+							this.plugin.settings.templateNameOrPath = value;
+							await this.plugin.saveSettings();
+						})
+				);
+		}
+
 	}
 }
