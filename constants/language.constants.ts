@@ -9,6 +9,8 @@ export const TRANSLATIONS: Record<
     RENAME_INPUT_FOLDER_DESCRIPTION: string;
     INPUT_FOLDER_SUFFIX: string;
     INPUT_FOLDER_SUFFIX_DESCRIPTION: string;
+    USE_ATTACHMENT_SETTINGS: string;
+    USE_ATTACHMENT_SETTINGS_DESCRIPTION: string;
     DISCLAIMER: string;
     INVALID_FOLDER_PATH: string;
     FOLDER_RENAME_ERROR: string;
@@ -27,6 +29,9 @@ export const TRANSLATIONS: Record<
     INPUT_FOLDER_SUFFIX: 'Input folder suffix',
     INPUT_FOLDER_SUFFIX_DESCRIPTION:
       'Add a suffix to the input folder after conversion (e.g. _PDF)',
+    USE_ATTACHMENT_SETTINGS: 'Use Obsidian attachment settings',
+    USE_ATTACHMENT_SETTINGS_DESCRIPTION:
+      'Move PDFs according to Obsidian\'s "Files & Links" attachment settings instead of using the folder suffix logic',
     DISCLAIMER:
       "*If there's no suffix, the files will be converted to the root folder",
     INVALID_FOLDER_PATH: 'Invalid folder path',
@@ -45,6 +50,9 @@ export const TRANSLATIONS: Record<
     INPUT_FOLDER_SUFFIX: 'Sufijo de carpeta de entrada',
     INPUT_FOLDER_SUFFIX_DESCRIPTION:
       'Agregar un sufijo a la carpeta de entrada después de la conversión (ej. _PDF)',
+    USE_ATTACHMENT_SETTINGS: 'Usar configuración de adjuntos de Obsidian',
+    USE_ATTACHMENT_SETTINGS_DESCRIPTION:
+      'Mover PDFs según la configuración de adjuntos de "Archivos y Enlaces" de Obsidian en lugar de usar la lógica de sufijo de carpeta',
     DISCLAIMER:
       '*Si no hay sufijo, los archivos se convertirán a la carpeta raíz.',
     INVALID_FOLDER_PATH: 'Ruta de carpeta inválida',
@@ -64,6 +72,9 @@ export const TRANSLATIONS: Record<
     INPUT_FOLDER_SUFFIX: 'Sufijo de carpeta de entrada',
     INPUT_FOLDER_SUFFIX_DESCRIPTION:
       "Ajouter un suffixe à la dossier d'entrée après la conversion (ex. _PDF)",
+    USE_ATTACHMENT_SETTINGS: 'Utiliser les paramètres de pièces jointes d\'Obsidian',
+    USE_ATTACHMENT_SETTINGS_DESCRIPTION:
+      'Déplacer les PDFs selon les paramètres de pièces jointes "Fichiers et Liens" d\'Obsidian au lieu d\'utiliser la logique de suffixe de dossier',
     DISCLAIMER:
       "*Si le dossier n'a pas de suffixe, les fichiers seront convertis dans le dossier racine.",
     INVALID_FOLDER_PATH: 'Chemin de dossier invalide',
@@ -83,6 +94,9 @@ export const TRANSLATIONS: Record<
     INPUT_FOLDER_SUFFIX: 'Eingabefolder Suffix',
     INPUT_FOLDER_SUFFIX_DESCRIPTION:
       'Eingabefolder Suffix nach der Konvertierung hinzufügen (ex. _PDF)',
+    USE_ATTACHMENT_SETTINGS: 'Obsidian-Anhangeinstellungen verwenden',
+    USE_ATTACHMENT_SETTINGS_DESCRIPTION:
+      'PDFs gemäß den Anhangeinstellungen von "Dateien und Links" in Obsidian verschieben, anstatt die Suffix-Logik zu verwenden',
     DISCLAIMER:
       '*Wenn kein Suffix vorhanden ist, werden die Dateien in die Stammordner konvertiert.',
     INVALID_FOLDER_PATH: 'Ungültiger Ordnerpfad',
@@ -102,6 +116,9 @@ export const TRANSLATIONS: Record<
     INPUT_FOLDER_SUFFIX: 'Sufisso della cartella di input',
     INPUT_FOLDER_SUFFIX_DESCRIPTION:
       'Aggiungere un suffisso alla cartella di input dopo la conversione (es. _PDF)',
+    USE_ATTACHMENT_SETTINGS: 'Usa impostazioni allegati di Obsidian',
+    USE_ATTACHMENT_SETTINGS_DESCRIPTION:
+      'Sposta i PDF secondo le impostazioni degli allegati "File e Collegamenti" di Obsidian invece di usare la logica del suffisso cartella',
     DISCLAIMER:
       "*Se non c'è un suffisso, i file verranno convertiti nella cartella radice.",
     INVALID_FOLDER_PATH: 'Percorso cartella non valido',
@@ -121,6 +138,9 @@ export const TRANSLATIONS: Record<
     INPUT_FOLDER_SUFFIX: 'Sufixo da pasta de entrada',
     INPUT_FOLDER_SUFFIX_DESCRIPTION:
       'Adicionar um sufixo à pasta de entrada após a conversão (ex. _PDF)',
+    USE_ATTACHMENT_SETTINGS: 'Usar configurações de anexos do Obsidian',
+    USE_ATTACHMENT_SETTINGS_DESCRIPTION:
+      'Mover PDFs de acordo com as configurações de anexos de "Arquivos e Links" do Obsidian em vez de usar a lógica de sufixo de pasta',
     DISCLAIMER:
       '*Se não houver um sufixo, os arquivos serão convertidos para a pasta raiz.',
     INVALID_FOLDER_PATH: 'Caminho da pasta inválido',

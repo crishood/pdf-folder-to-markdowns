@@ -41,12 +41,14 @@ export default class PDFFolderToMarkdowns extends Plugin {
 				return;
 			}
 
-			// Calculate folder paths
+			// Calculate folder paths based on settings
 			const { renamedInputFolder, outputFolder } =
-				this._calculateFolderPaths(inputFolder);
+				this.settings.useAttachmentSettings
+					? { renamedInputFolder: inputFolder, outputFolder: inputFolder }
+					: this._calculateFolderPaths(inputFolder);
 
-			// Rename input folder
-			if (this.settings.renameInputFolder) {
+			// Rename input folder (only if not using attachment settings)
+			if (this.settings.renameInputFolder && !this.settings.useAttachmentSettings) {
 				try {
 					const folder =
 						this.app.vault.getAbstractFileByPath(inputFolder);
@@ -61,14 +63,16 @@ export default class PDFFolderToMarkdowns extends Plugin {
 				}
 			}
 
-			// Ensure the output folder exists
-			try {
-				if (!(await vault.adapter.exists(outputFolder))) {
-					await vault.createFolder(outputFolder);
+			// Ensure the output folder exists (only if not using attachment settings)
+			if (!this.settings.useAttachmentSettings) {
+				try {
+					if (!(await vault.adapter.exists(outputFolder))) {
+						await vault.createFolder(outputFolder);
+					}
+				} catch (error) {
+					new Notice(TRANSLATIONS[this.language].FOLDER_CREATE_ERROR);
+					return;
 				}
-			} catch (error) {
-				new Notice(TRANSLATIONS[this.language].FOLDER_CREATE_ERROR);
-				return;
 			}
 
 			// Get PDF files
@@ -87,13 +91,35 @@ export default class PDFFolderToMarkdowns extends Plugin {
 
 			// Create markdown files
 			for (const file of files) {
-				const mdFilePath = `${outputFolder}/${file.basename}.md`;
-
 				try {
-					if (await vault.adapter.exists(mdFilePath)) {
-						continue; // Skip existing files
+					let mdFilePath: string;
+					let pdfPath: string = file.path;
+
+					if (this.settings.useAttachmentSettings) {
+						const mdFilePathWithAttachments = `${outputFolder}/${file.basename}.md`;
+
+						if (await vault.adapter.exists(mdFilePathWithAttachments)) {
+							continue;
+						}
+
+						const mdFile = await vault.create(mdFilePathWithAttachments, "");
+						const attachmentPath = await this.app.fileManager.getAvailablePathForAttachment(
+							file.name,
+							mdFile.path
+						);
+
+						await this.app.fileManager.renameFile(file, attachmentPath);
+						pdfPath = attachmentPath;
+
+						await vault.modify(mdFile, `![[${pdfPath}]]`);
+					} else {
+						mdFilePath = `${outputFolder}/${file.basename}.md`;
+
+						if (await vault.adapter.exists(mdFilePath)) {
+							continue;
+						}
+						await vault.create(mdFilePath, `![[${pdfPath}]]`);
 					}
-					await vault.create(mdFilePath, `![[${file.path}]]`);
 				} catch (error) {
 					new Notice(
 						TRANSLATIONS[this.language].FILE_CREATE_ERROR(

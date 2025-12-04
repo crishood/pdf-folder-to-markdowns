@@ -15,6 +15,22 @@ export class PDFFolderToMarkdownsSettingTab extends PluginSettingTab {
 		containerEl.empty();
 
 		new Setting(containerEl)
+			.setName(TRANSLATIONS[this.plugin.language].USE_ATTACHMENT_SETTINGS)
+			.setDesc(
+				TRANSLATIONS[this.plugin.language]
+					.USE_ATTACHMENT_SETTINGS_DESCRIPTION
+			)
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.useAttachmentSettings)
+					.onChange(async (value) => {
+						this.plugin.settings.useAttachmentSettings = value;
+						await this.plugin.saveSettings();
+						this.display(); // Refresh to show/hide relevant settings
+					})
+			);
+
+		new Setting(containerEl)
 			.setName(TRANSLATIONS[this.plugin.language].RENAME_INPUT_FOLDER)
 			.setDesc(
 				TRANSLATIONS[this.plugin.language]
