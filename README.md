@@ -9,21 +9,27 @@ This plugin is useful for users who want to migrate their PDF notes from differe
 -   Each Markdown file will embed its corresponding PDF.
 -   Optionally rename the input folder after conversion.
 -   Configurable suffix for renaming the input folder.
+-   Respect Obsidian's attachment settings to move PDFs next to the generated note.
+-   Automatically run an Obsidian template (core Templates or Templater) after each note is created.
 
 ## ⚙️ Settings
 
 -   **Rename Input Folder**: If enabled, the input folder will be renamed by adding `_NOTES` or the configured suffix after conversion.
 -   **Input Folder Suffix**: The suffix to add to the input folder after conversion.
+-   **Use Obsidian Attachment Settings**: When enabled, PDFs are moved according to the "Files & Links" attachment preferences and the notes are stored beside them.
+-   **Apply Template After Conversion**: Runs a template on each generated note. The plugin prefers the community Templater plugin when available, otherwise it falls back to the core Templates plugin.
+-   **Template Name or Path**: Provide the template filename or full path (case-sensitive). The `.md` extension is optional.
 
 ## 🚀 Usage
 
 1. **Right-click** on any folder containing PDFs inside Obsidian.
 2. Select **"Convert PDFs to Markdown"**.
 3. The plugin will:
-    - Create a new folder with the same name as the original.
+    - Create a new folder with the same name as the original (unless using attachment settings).
     - Convert each PDF into a Markdown file.
     - Embed the corresponding PDF inside the Markdown file.
-    - If the **Rename Input Folder** setting is enabled, the original folder will be renamed with a `_PDF` suffix.
+    - Optionally apply attachment settings and templates depending on your configuration.
+    - If the **Rename Input Folder** setting is enabled, the original folder will be renamed with the configured suffix.
 
 ## 🔧 Installation
 
