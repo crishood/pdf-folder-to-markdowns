@@ -14,6 +14,22 @@ import { Settings, DEFAULT_SETTINGS } from "./models/settings.model";
 import { PDFFolderToMarkdownsSettingTab } from "./settings-tab";
 const DEFAULT_LANGUAGE: SupportedLanguages = "en";
 
+function getValidLanguage(language: string | undefined): SupportedLanguages {
+	if (!language) return DEFAULT_LANGUAGE;
+	const supportedLanguages: SupportedLanguages[] = [
+		"en",
+		"es",
+		"fr",
+		"de",
+		"it",
+		"pt",
+		"ko",
+	];
+	return supportedLanguages.includes(language as SupportedLanguages)
+		? (language as SupportedLanguages)
+		: DEFAULT_LANGUAGE;
+}
+
 interface MinimalTemplaterPlugin {
 	settings: {
 		templates_folder: string;
@@ -41,8 +57,7 @@ export default class PDFFolderToMarkdowns extends Plugin {
 	async onload() {
 		await super.onload();
 		await this.loadSettings();
-		this.language =
-			(getLanguage() as SupportedLanguages) || DEFAULT_LANGUAGE;
+		this.language = getValidLanguage(getLanguage());
 		this.registerEvent(
 			this.app.workspace.on("file-menu", (menu, folder) => {
 				if (folder instanceof TFile || !folder) return;
