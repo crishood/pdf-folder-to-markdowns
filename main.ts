@@ -27,6 +27,9 @@ type CoreTemplatesPlugin = {
 	enabled: boolean;
 	instance: {
 		insertTemplate: (templateFile: TFile) => Promise<void>;
+		options: {
+			folder: string;
+		};
 	};
 };
 
@@ -66,13 +69,16 @@ export default class PDFFolderToMarkdowns extends Plugin {
 			}
 
 			// Calculate folder paths based on settings
-			const { renamedInputFolder, outputFolder } =
-				this.settings.useAttachmentSettings
-					? { renamedInputFolder: inputFolder, outputFolder: inputFolder }
-					: this._calculateFolderPaths(inputFolder);
+			const { renamedInputFolder, outputFolder } = this.settings
+				.useAttachmentSettings
+				? { renamedInputFolder: inputFolder, outputFolder: inputFolder }
+				: this._calculateFolderPaths(inputFolder);
 
 			// Rename input folder (only if not using attachment settings)
-			if (this.settings.renameInputFolder && !this.settings.useAttachmentSettings) {
+			if (
+				this.settings.renameInputFolder &&
+				!this.settings.useAttachmentSettings
+			) {
 				try {
 					const folder =
 						this.app.vault.getAbstractFileByPath(inputFolder);
@@ -122,17 +128,28 @@ export default class PDFFolderToMarkdowns extends Plugin {
 					if (this.settings.useAttachmentSettings) {
 						const mdFilePathWithAttachments = `${outputFolder}/${file.basename}.md`;
 
-						if (await vault.adapter.exists(mdFilePathWithAttachments)) {
+						if (
+							await vault.adapter.exists(
+								mdFilePathWithAttachments
+							)
+						) {
 							continue;
 						}
 
-						const mdFile = await vault.create(mdFilePathWithAttachments, "");
-						const attachmentPath = await this.app.fileManager.getAvailablePathForAttachment(
-							file.name,
-							mdFile.path
+						const mdFile = await vault.create(
+							mdFilePathWithAttachments,
+							""
 						);
+						const attachmentPath =
+							await this.app.fileManager.getAvailablePathForAttachment(
+								file.name,
+								mdFile.path
+							);
 
-						await this.app.fileManager.renameFile(file, attachmentPath);
+						await this.app.fileManager.renameFile(
+							file,
+							attachmentPath
+						);
 						pdfPath = attachmentPath;
 
 						await this.applyTemplateIfNeeded(mdFile);
@@ -260,15 +277,34 @@ export default class PDFFolderToMarkdowns extends Plugin {
 		const core = this.getCoreTemplatesPlugin();
 		if (!core || !core.enabled) return false;
 
-		const templateFile = this.findTemplateFileByName(templateName);
+		// Get the templates folder from core templates plugin settings
+		const templatesFolder = core.instance.options?.folder || undefined;
+		const templateFile = this.findTemplateFileByName(
+			templateName,
+			templatesFolder
+		);
 		if (!templateFile) {
 			throw new Error(
-				`Core Templates file "${templateName}" was not found.`
+				`Core Templates file "${templateName}" was not found${
+					templatesFolder ? ` in folder "${templatesFolder}"` : ""
+				}.`
 			);
 		}
 
 		await this.openNoteInActiveLeaf(note);
 		await core.instance.insertTemplate(templateFile);
+
+		// Ensure the template content is saved to the vault
+		const view = this.app.workspace.getActiveViewOfType(MarkdownView);
+		if (view && view.file?.path === note.path) {
+			// Trigger a save by reading and writing (this ensures vault is updated)
+			await new Promise((resolve) => setTimeout(resolve, 50));
+			const editorContent = view.editor.getValue();
+			if (editorContent) {
+				await this.app.vault.modify(note, editorContent);
+			}
+		}
+
 		return true;
 	}
 
@@ -302,9 +338,7 @@ export default class PDFFolderToMarkdowns extends Plugin {
 			}
 		}
 
-		const bareName = hasExt
-			? normalized.replace(/\.md$/i, "")
-			: normalized;
+		const bareName = hasExt ? normalized.replace(/\.md$/i, "") : normalized;
 		const targetName = `${bareName}.md`;
 		const prefix = folder
 			? folder.endsWith("/")
@@ -340,7 +374,16 @@ export default class PDFFolderToMarkdowns extends Plugin {
 		note: TFile,
 		pdfPath: string
 	): Promise<void> {
-		const content = await this.app.vault.read(note);
+		// Try to read from editor first (in case template was just inserted)
+		// Otherwise read from vault
+		let content: string;
+		const view = this.app.workspace.getActiveViewOfType(MarkdownView);
+		if (view && view.file?.path === note.path) {
+			content = view.editor.getValue();
+		} else {
+			content = await this.app.vault.read(note);
+		}
+
 		const hasPlaceholder = /{{\s*pdf:path\s*}}/i.test(content);
 		if (!hasPlaceholder) {
 			console.debug(
@@ -370,7 +413,16 @@ export default class PDFFolderToMarkdowns extends Plugin {
 
 	private async ensurePdfEmbed(note: TFile, pdfPath: string): Promise<void> {
 		const embedRegex = this.getPdfEmbedRegex(pdfPath);
-		const content = await this.app.vault.read(note);
+		// Try to read from editor first (in case template was just inserted)
+		// Otherwise read from vault
+		let content: string;
+		const view = this.app.workspace.getActiveViewOfType(MarkdownView);
+		if (view && view.file?.path === note.path) {
+			content = view.editor.getValue();
+		} else {
+			content = await this.app.vault.read(note);
+		}
+
 		if (embedRegex.test(content)) {
 			return;
 		}
@@ -401,9 +453,18 @@ export default class PDFFolderToMarkdowns extends Plugin {
 
 	private getCoreTemplatesPlugin(): CoreTemplatesPlugin | null {
 		const anyApp = this.app as any;
-		return (anyApp.internalPlugins?.plugins?.["templates"] ?? null) as
-			| CoreTemplatesPlugin
-			| null;
+		const plugin = anyApp.internalPlugins?.plugins?.["templates"];
+		if (!plugin) return null;
+
+		// Ensure the plugin has the expected structure
+		if (
+			!plugin.instance ||
+			typeof plugin.instance.insertTemplate !== "function"
+		) {
+			return null;
+		}
+
+		return plugin as CoreTemplatesPlugin;
 	}
 
 	private handleTemplateError(templateName: string, error: unknown) {
